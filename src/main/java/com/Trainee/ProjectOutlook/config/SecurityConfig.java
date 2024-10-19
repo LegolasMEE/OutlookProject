@@ -49,10 +49,10 @@ public class SecurityConfig {
                 .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
         );
 
-        // Использование JWT для аутентификации (без сессий)
+        // JWT для аутентификации (без сессий)
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Добавляем JWT фильтр перед стандартным UsernamePasswordAuthenticationFilter
+        // JWT фильтр перед стандартным UsernamePasswordAuthenticationFilter
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

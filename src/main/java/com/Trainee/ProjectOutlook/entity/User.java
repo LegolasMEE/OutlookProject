@@ -26,6 +26,5 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // Getters и Setters
 }
 
