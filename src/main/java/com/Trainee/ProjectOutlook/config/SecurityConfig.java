@@ -44,8 +44,8 @@ public class SecurityConfig {
 
         // Настройка авторизации с учетом ролей
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/authenticate").permitAll() // Разрешаем доступ к /authenticate без авторизации
-                .requestMatchers("/admin/**").hasAuthority("EXPERT") // Только для роли EXPERT
+                .requestMatchers("/authenticate").permitAll()// Разрешаем доступ к /authenticate без авторизации
+                .requestMatchers("/api/meetings/schedule").hasRole("USER")
                 .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
         );
 

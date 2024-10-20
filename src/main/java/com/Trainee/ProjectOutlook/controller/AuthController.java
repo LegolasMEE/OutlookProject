@@ -4,7 +4,6 @@ import com.Trainee.ProjectOutlook.model.AuthRequest;
 import com.Trainee.ProjectOutlook.service.CustomUserDetailsService;
 import com.Trainee.ProjectOutlook.model.JwtResponse;
 import com.Trainee.ProjectOutlook.jwt.JwtUtil;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-@AllArgsConstructor
 @RestController
 public class AuthController {
 
