@@ -6,7 +6,9 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 @Getter
 @Setter
-public class MeetingRequest {
+public class MeetingUpdateRequest {
+    private Long Id;
+
     private Long userId;
 
     private Long expertId;
@@ -20,5 +22,4 @@ public class MeetingRequest {
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
-
 }

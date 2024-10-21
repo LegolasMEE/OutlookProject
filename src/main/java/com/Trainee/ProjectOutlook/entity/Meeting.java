@@ -27,6 +27,12 @@ public class Meeting {
     private LocalDateTime startTime;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column()
+    private String comment;
+
+    @Column(nullable = false)
     private LocalDateTime endTime;
 
     @ManyToOne
