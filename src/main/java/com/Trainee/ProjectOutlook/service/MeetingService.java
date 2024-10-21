@@ -5,6 +5,8 @@ import com.Trainee.ProjectOutlook.entity.User;
 import com.Trainee.ProjectOutlook.repository.MeetingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,7 @@ public class MeetingService {
     private UserService userService;
 
     // Создание новой встречи
+    @Transactional
     public Meeting scheduleMeeting(Long userId, Long expertId, String name, String description, String comment, LocalDateTime startTime, LocalDateTime endTime) {
         User user = userService.findById(userId);
         User expert = userService.findById(expertId);
@@ -36,19 +39,21 @@ public class MeetingService {
     }
 
     // Получение всех встреч пользователя
+    @Transactional
     public List<Meeting> getMeetingsByUser(Long userId) {
         return meetingRepository.findByUserId(userId);
     }
 
     // Получение всех встреч эксперта
+    @Transactional
     public List<Meeting> getMeetingsByExpert(Long expertId) {
         return meetingRepository.findByExpertId(expertId);
     }
-
+    @Transactional
     public Optional<Meeting> getMeetingById(Long meetingId) {
         return meetingRepository.findById(meetingId);
     }
-
+    @Transactional
     public Meeting save(Meeting meeting) {
         return meetingRepository.save(meeting);
     }
