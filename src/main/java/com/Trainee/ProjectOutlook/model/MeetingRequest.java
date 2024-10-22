@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class MeetingRequest {
@@ -14,8 +15,6 @@ public class MeetingRequest {
     private String name;
 
     private String description;
-
-    private String comment;
 
     private LocalDateTime startTime;
 

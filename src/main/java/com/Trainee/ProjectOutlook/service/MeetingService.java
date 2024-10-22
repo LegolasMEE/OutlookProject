@@ -22,7 +22,7 @@ public class MeetingService {
 
     // Создание новой встречи
     @Transactional
-    public Meeting scheduleMeeting(Long userId, Long expertId, String name, String description, String comment, LocalDateTime startTime, LocalDateTime endTime) {
+    public void scheduleMeeting(Long userId, Long expertId, String name, String description, LocalDateTime startTime, LocalDateTime endTime) {
         User user = userService.findById(userId);
         User expert = userService.findById(expertId);
 
@@ -30,12 +30,11 @@ public class MeetingService {
         meeting.setUser(user);
         meeting.setExpert(expert);
         meeting.setName(name);
-        meeting.setComment(comment);
         meeting.setDescription(description);
         meeting.setStartTime(startTime);
         meeting.setEndTime(endTime);
 
-        return meetingRepository.save(meeting);
+        meetingRepository.save(meeting);
     }
 
     // Получение всех встреч пользователя
@@ -49,12 +48,19 @@ public class MeetingService {
     public List<Meeting> getMeetingsByExpert(Long expertId) {
         return meetingRepository.findByExpertId(expertId);
     }
+
     @Transactional
     public Optional<Meeting> getMeetingById(Long meetingId) {
         return meetingRepository.findById(meetingId);
     }
+
     @Transactional
-    public Meeting save(Meeting meeting) {
-        return meetingRepository.save(meeting);
+    public void save(Meeting meeting) {
+        meetingRepository.save(meeting);
+    }
+
+    @Transactional
+    public void delete(Meeting meeting) {
+        meetingRepository.delete(meeting);
     }
 }

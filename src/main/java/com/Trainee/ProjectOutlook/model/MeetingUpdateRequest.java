@@ -4,14 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class MeetingUpdateRequest {
-    private Long Id;
-
-    private Long userId;
-
-    private Long expertId;
+    private Long meetingId;
 
     private String name;
 
