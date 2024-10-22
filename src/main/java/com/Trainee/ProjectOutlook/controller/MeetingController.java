@@ -6,6 +6,7 @@ import com.Trainee.ProjectOutlook.enums.Role;
 import com.Trainee.ProjectOutlook.model.*;
 import com.Trainee.ProjectOutlook.service.MeetingService;
 import com.Trainee.ProjectOutlook.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -48,7 +48,7 @@ public class MeetingController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.findByUsername(currentUsername);
-        if(currentUser.getId().equals(allMeetingsByUserRequest.getUserId())) {
+        if (currentUser.getId().equals(allMeetingsByUserRequest.getUserId())) {
             List<Meeting> meetings;
             if (allMeetingsByUserRequest.getRole() == Role.USER) {
                 meetings = meetingService.getMeetingsByUser(allMeetingsByUserRequest.getUserId());
@@ -73,7 +73,7 @@ public class MeetingController {
         String currentUsername = authentication.getName();
 
         // Ищем встречу по ID
-        Meeting meeting = meetingService.getMeetingById(updateRequest.getMeetingId()).orElseThrow(() -> new RuntimeException("Meeting not found"));
+        Meeting meeting = meetingService.getMeetingById(updateRequest.getMeetingId()).orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
 
         // Ищем текущего пользователя по имени
         User currentUser = userService.findByUsername(currentUsername);
@@ -109,7 +109,7 @@ public class MeetingController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.findByUsername(currentUsername);
-        Meeting meeting = meetingService.getMeetingById(meetingDeleteRequest.getMeetingId()).orElseThrow(() -> new RuntimeException("Meeting not found"));
+        Meeting meeting = meetingService.getMeetingById(meetingDeleteRequest.getMeetingId()).orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
         if (meeting.getUser().getId().equals(currentUser.getId()) ||
                 meeting.getExpert().getId().equals(currentUser.getId())) {
             meetingService.delete(meeting);

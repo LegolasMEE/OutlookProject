@@ -1,8 +1,6 @@
 package com.Trainee.ProjectOutlook.model;
 
-import com.Trainee.ProjectOutlook.enums.Role;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter

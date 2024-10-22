@@ -2,7 +2,6 @@ package com.Trainee.ProjectOutlook.service;
 
 import com.Trainee.ProjectOutlook.entity.Meeting;
 import com.Trainee.ProjectOutlook.entity.User;
-import com.Trainee.ProjectOutlook.model.MeetingRequest;
 import com.Trainee.ProjectOutlook.repository.MeetingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

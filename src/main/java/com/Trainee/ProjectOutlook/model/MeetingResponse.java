@@ -1,8 +1,8 @@
 package com.Trainee.ProjectOutlook.model;
 
-import com.Trainee.ProjectOutlook.entity.Meeting;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Getter
