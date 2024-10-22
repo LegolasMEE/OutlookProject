@@ -15,8 +15,6 @@ public class MeetingRequest {
 
     private String description;
 
-    private String comment;
-
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;

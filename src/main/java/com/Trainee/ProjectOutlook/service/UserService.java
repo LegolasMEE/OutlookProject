@@ -14,11 +14,10 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
+    @Transactional
     public List<User> findAllExperts() {
         return userRepository.findByRole(Role.EXPERT);
     }
-
     @Transactional
     public User findById(Long id) {
         return userRepository.findById(id)

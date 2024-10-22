@@ -28,7 +28,7 @@ public class AuthController {
     public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
         try {
             // Аутентификация пользователя с использованием менеджера аутентификации
-            Authentication authentication = authenticationManager.authenticate(
+            authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
         } catch (AuthenticationException e) {
