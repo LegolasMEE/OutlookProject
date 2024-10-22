@@ -11,6 +11,8 @@ import com.Trainee.ProjectOutlook.entity.MeetingSlot;
 import com.Trainee.ProjectOutlook.entity.User;
 import com.Trainee.ProjectOutlook.repository.MeetingSlotRepository;
 
+import java.util.Optional;
+
 @Service
 public class MeetingSlotService {
     @Autowired
@@ -35,6 +37,12 @@ public class MeetingSlotService {
         return meetingSlotRepository.save(slot);
     }
 
+    // получение слота по id
+    @Transactional
+    public Optional<MeetingSlot> getMeetingSlotById(Long slotId) {
+        return meetingSlotRepository.findById(slotId);
+    }
+
     //получение всех слотов эксперта
     @Transactional
     public List<MeetingSlot> getMeetingSlotsByExpert(Long userId) {
@@ -43,7 +51,7 @@ public class MeetingSlotService {
 
     //удаление слота
     @Transactional
-    public void save(MeetingSlot meetingSlot) {
+    public void delete(MeetingSlot meetingSlot) {
         meetingSlotRepository.delete(meetingSlot);
     }
 }
