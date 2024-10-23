@@ -39,13 +39,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Отключаем CSRF (так как используем JWT, а не сессии)
+
         http.csrf(AbstractHttpConfigurer::disable);
 
-        // Настройка авторизации с учетом ролей
+        // Настройка авторизации
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/authenticate").permitAll()// Разрешаем доступ к /authenticate без авторизации
-                .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
+                .requestMatchers("/authenticate").permitAll()
+                .anyRequest().authenticated()
         );
 
         // JWT для аутентификации (без сессий)

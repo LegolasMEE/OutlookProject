@@ -62,7 +62,6 @@ public class MeetingController {
                     .toList();
             return new ResponseEntity<>(meetingResponses, HttpStatus.OK);
         } else {
-            // Если пользователь не имеет прав на просмотр, возвращаем ошибку
             throw new RuntimeException("Access denied: You can only view your own meetings.");
         }
     }
@@ -72,13 +71,10 @@ public class MeetingController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
 
-        // Ищем встречу по ID
         Meeting meeting = meetingService.getMeetingById(updateRequest.getMeetingId()).orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
 
-        // Ищем текущего пользователя по имени
         User currentUser = userService.findByUsername(currentUsername);
 
-        // Проверяем, что текущий пользователь либо создал встречу, либо является назначенным экспертом
         if (meeting.getUser().getId().equals(currentUser.getId()) ||
                 meeting.getExpert().getId().equals(currentUser.getId())) {
 
@@ -99,7 +95,6 @@ public class MeetingController {
             }
             meetingService.save(meeting);
         } else {
-            // Если пользователь не имеет прав на изменение, возвращаем ошибку
             throw new RuntimeException("Access denied: Only the creator or assigned expert can edit the description.");
         }
     }
@@ -114,18 +109,22 @@ public class MeetingController {
                 meeting.getExpert().getId().equals(currentUser.getId())) {
             meetingService.delete(meeting);
         } else {
-            // Если пользователь не имеет прав на изменение, возвращаем ошибку
             throw new RuntimeException("Access denied: Only the creator or assigned expert can edit the description.");
         }
     }
 
     @GetMapping("/get-reviewers")
-    public ResponseEntity<List<GetReviewersResponse>> getAllReviewers() {
+    public ResponseEntity<List<GetReviewersResponse>> getAllReviewers(@RequestBody ReviewersFilterRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.findByUsername(currentUsername);
         if (currentUser.getRole() == Role.USER) {
-            List<User> users = userService.findAllExperts();
+            List<User> users;
+            if(request.getSpecialization() != null) {
+                users = userService.findBySpecialization(request.getSpecialization());
+            } else {
+                users = userService.findAllExperts();
+            }
             List<GetReviewersResponse> reviewersResponses = users.stream()
                     .map(user -> new GetReviewersResponse(user.getUsername(), user.getId(), user.getSpecialization()))
                     .toList();

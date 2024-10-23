@@ -20,7 +20,6 @@ public class MeetingService {
     @Autowired
     private UserService userService;
 
-    // Создание новой встречи
     @Transactional
     public void scheduleMeeting(Long userId, Long expertId, String name, String description, LocalDateTime startTime, LocalDateTime endTime) {
         User user = userService.findById(userId);
@@ -37,13 +36,11 @@ public class MeetingService {
         meetingRepository.save(meeting);
     }
 
-    // Получение всех встреч пользователя
     @Transactional
     public List<Meeting> getMeetingsByUser(Long userId) {
         return meetingRepository.findByUserId(userId);
     }
 
-    // Получение всех встреч эксперта
     @Transactional
     public List<Meeting> getMeetingsByExpert(Long expertId) {
         return meetingRepository.findByExpertId(expertId);

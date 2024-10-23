@@ -31,4 +31,9 @@ public class UserService {
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
+
+    @Transactional
+    public List<User> findBySpecialization(String specialization) {
+        return userRepository.findBySpecialization(specialization);
+    }
 }
