@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 public class MeetingSlotRequest {
 
-    private Long id;
-
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;

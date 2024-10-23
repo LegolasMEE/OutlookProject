@@ -56,7 +56,6 @@ public class MeetingSlotController {
     
     @GetMapping("/get-expert-slots")
     public ResponseEntity<List<MeetingSlotResponse>> getAllMeetingSlotsByExpert(@RequestBody MeetingSlotsByExpertRequest request) {
-        // Без проверки роли, все авторизованные пользователи могут просматривать слоты
         List<MeetingSlot> slots = meetingSlotService.getMeetingSlotsByExpert(request.getExpertId());
 
         List<MeetingSlotResponse> slotResponses = slots.stream()
