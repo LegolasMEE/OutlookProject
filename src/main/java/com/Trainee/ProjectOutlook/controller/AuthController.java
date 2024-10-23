@@ -27,16 +27,13 @@ public class AuthController {
     @PostMapping("/authenticate")
     public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
         try {
-            // Аутентификация пользователя с использованием менеджера аутентификации
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
         } catch (AuthenticationException e) {
             throw new RuntimeException("Incorrect username or password", e);
         }
-        // Получение данных пользователя
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-        // Генерация JWT токена на основе данных пользователя
         final String jwt = jwtUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new JwtResponse(jwt));

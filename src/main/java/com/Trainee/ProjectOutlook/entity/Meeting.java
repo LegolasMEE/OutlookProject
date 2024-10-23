@@ -37,11 +37,11 @@ public class Meeting {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // Пользователь, который назначил встречу
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "expert_id", nullable = false)
-    private User expert; // Эксперт, консультирующий пользователя
+    private User expert;
 
 }
 
