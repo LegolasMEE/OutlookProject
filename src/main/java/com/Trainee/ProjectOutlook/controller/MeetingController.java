@@ -4,6 +4,7 @@ import com.Trainee.ProjectOutlook.entity.Meeting;
 import com.Trainee.ProjectOutlook.entity.User;
 import com.Trainee.ProjectOutlook.enums.Role;
 import com.Trainee.ProjectOutlook.model.*;
+import com.Trainee.ProjectOutlook.service.ExpertProfileService;
 import com.Trainee.ProjectOutlook.service.MeetingService;
 import com.Trainee.ProjectOutlook.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,6 +26,9 @@ public class MeetingController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ExpertProfileService expertProfileService;
 
     @PostMapping("/book-meeting")
     public void scheduleMeeting(@RequestBody MeetingRequest meetingRequest) {
@@ -119,14 +123,14 @@ public class MeetingController {
         String currentUsername = authentication.getName();
         User currentUser = userService.findByUsername(currentUsername);
         if (currentUser.getRole() == Role.USER) {
-            List<User> users;
+            List<ExpertProfile> experts;
             if(request.getSpecialization() != null) {
-                users = userService.findBySpecialization(request.getSpecialization());
+                experts = expertProfileService.getExpertsBySpecialization(request.getSpecialization());
             } else {
-                users = userService.findAllExperts();
+                experts = expertProfileService.getExpertsBySpecialization(null);
             }
-            List<GetReviewersResponse> reviewersResponses = users.stream()
-                    .map(user -> new GetReviewersResponse(user.getUsername(), user.getId(), user.getSpecialization()))
+            List<GetReviewersResponse> reviewersResponses = experts.stream()
+                    .map(user -> new GetReviewersResponse(user.getName(), user.getId(), user.getSpecialization()))
                     .toList();
             return new ResponseEntity<>(reviewersResponses, HttpStatus.OK);
         } else
