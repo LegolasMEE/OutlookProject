@@ -44,16 +44,15 @@ public class MeetingController {
     }
 
     @GetMapping("/get-meeting")
-    public ResponseEntity<List<MeetingResponse>> getMeetingsByUser(@RequestBody AllMeetingsByUserRequest allMeetingsByUserRequest) {
+    public ResponseEntity<List<MeetingResponse>> getMeetingsByUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.findByUsername(currentUsername);
-        if (currentUser.getId().equals(allMeetingsByUserRequest.getUserId())) {
             List<Meeting> meetings;
-            if (allMeetingsByUserRequest.getRole() == Role.USER) {
-                meetings = meetingService.getMeetingsByUser(allMeetingsByUserRequest.getUserId());
+            if (currentUser.getRole() == Role.USER) {
+                meetings = meetingService.getMeetingsByUser(currentUser.getId());
             } else {
-                meetings = meetingService.getMeetingsByExpert(allMeetingsByUserRequest.getUserId());
+                meetings = meetingService.getMeetingsByExpert(currentUser.getId());
             }
             List<MeetingResponse> meetingResponses = meetings.stream()
                     .map(meeting -> new MeetingResponse(meeting.getId(), meeting.getName(), meeting.getExpert().getUsername(),
@@ -61,9 +60,6 @@ public class MeetingController {
                             meeting.getStartTime(), meeting.getEndTime()))
                     .toList();
             return new ResponseEntity<>(meetingResponses, HttpStatus.OK);
-        } else {
-            throw new RuntimeException("Access denied: You can only view your own meetings.");
-        }
     }
 
     @PatchMapping("/get-meeting")
@@ -113,7 +109,7 @@ public class MeetingController {
         }
     }
 
-    @GetMapping("/get-reviewers")
+    @PostMapping("/get-reviewers")
     public ResponseEntity<List<GetReviewersResponse>> getAllReviewers(@RequestBody ReviewersFilterRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();

@@ -19,7 +19,6 @@ import com.Trainee.ProjectOutlook.enums.Role;
 import com.Trainee.ProjectOutlook.model.MeetingSlotDeletionRequest;
 import com.Trainee.ProjectOutlook.model.MeetingSlotRequest;
 import com.Trainee.ProjectOutlook.model.MeetingSlotResponse;
-import com.Trainee.ProjectOutlook.model.MeetingSlotsByExpertRequest;
 import com.Trainee.ProjectOutlook.service.MeetingSlotService;
 import com.Trainee.ProjectOutlook.service.UserService;
 
@@ -54,8 +53,11 @@ public class MeetingSlotController {
     }
     
     @GetMapping("/get-expert-slots")
-    public ResponseEntity<List<MeetingSlotResponse>> getAllMeetingSlotsByExpert(@RequestBody MeetingSlotsByExpertRequest request) {
-        List<MeetingSlot> slots = meetingSlotService.getMeetingSlotsByExpert(request.getExpertId());
+    public ResponseEntity<List<MeetingSlotResponse>> getAllMeetingSlotsByExpert() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userService.findByUsername(currentUsername);
+        List<MeetingSlot> slots = meetingSlotService.getMeetingSlotsByExpert(currentUser.getId());
 
         List<MeetingSlotResponse> slotResponses = slots.stream()
                 .map(slot -> new MeetingSlotResponse(slot.getId(), slot.getStartTime(), slot.getEndTime(), 
