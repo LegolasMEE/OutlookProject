@@ -40,6 +40,6 @@ public class MeetingSlot {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User expert; // Эксперт, добавивший слот для консультации
+    private User expert;
 
 }

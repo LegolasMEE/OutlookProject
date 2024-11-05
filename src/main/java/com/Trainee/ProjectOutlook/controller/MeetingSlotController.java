@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.Trainee.ProjectOutlook.entity.MeetingSlot;
 import com.Trainee.ProjectOutlook.entity.User;
 import com.Trainee.ProjectOutlook.enums.Role;
@@ -71,13 +70,12 @@ public class MeetingSlotController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.findByUsername(currentUsername);
-        if (currentUser.getRole() != Role.EXPERT) { // Если текущий пользователь не является экспертом, то у него нет прав на удаление слотов
+        if (currentUser.getRole() != Role.EXPERT) {
             throw new RuntimeException("Only experts can delete meeting slots!");
         }        
 
         MeetingSlot meetingSlot = meetingSlotService.getMeetingSlotById(request.getMeetingSlotId()).orElseThrow(() -> new EntityNotFoundException("Meeting slot not found!"));
         if (!meetingSlot.getExpert().getId().equals(currentUser.getId())) {
-            //Если текущий пользователь не является создателем конкретного слота, то он не может удалить его
             throw new RuntimeException("Only creator of the meeting slot can delete it.");
         }
         meetingSlotService.delete(meetingSlot);
