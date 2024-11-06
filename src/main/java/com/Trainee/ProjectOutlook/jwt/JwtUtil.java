@@ -1,9 +1,11 @@
 package com.Trainee.ProjectOutlook.jwt;
 
+import com.Trainee.ProjectOutlook.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import java.util.Date;
@@ -14,6 +16,8 @@ import java.util.function.Function;
 public class JwtUtil {
 
     private String SECRET_KEY = "qBTmv4oXFFR2GwjexDJ4t6fsIUIUhhXqlktXjXdkcyygs8nPVEwMfo29VDRRepYDVV5IkIxBMzr7OEHXEHd37w==";
+    @Autowired
+    private UserService userService;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -37,13 +41,15 @@ public class JwtUtil {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return createToken(userDetails.getAuthorities().stream().findFirst().orElse(null).getAuthority(), userDetails.getUsername());
+        return createToken(userDetails.getAuthorities().stream().findFirst().orElse(null).getAuthority(),
+                userDetails.getUsername(), userService.findByUsername(userDetails.getUsername()).getId());
     }
 
-    private String createToken(String role, String subject) {
+    private String createToken(String role, String subject, Long id) {
         return Jwts.builder()
                 .setSubject(subject)
                 .claim("roles", role)
+                .claim("userId", id)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 часов
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes())
