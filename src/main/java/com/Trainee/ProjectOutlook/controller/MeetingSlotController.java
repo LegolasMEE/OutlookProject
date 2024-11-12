@@ -7,12 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.Trainee.ProjectOutlook.entity.MeetingSlot;
 import com.Trainee.ProjectOutlook.entity.User;
 import com.Trainee.ProjectOutlook.enums.Role;
@@ -53,15 +48,12 @@ public class MeetingSlotController {
     }
     
     @GetMapping("/get-expert-slots")
-    public ResponseEntity<List<MeetingSlotResponse>> getAllMeetingSlotsByExpert() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userService.findByUsername(currentUsername);
-        List<MeetingSlot> slots = meetingSlotService.getMeetingSlotsByExpert(currentUser.getId());
+    public ResponseEntity<List<MeetingSlotResponse>> getAllMeetingSlotsByExpert(@RequestParam long expertId) {
+        List<MeetingSlot> slots = meetingSlotService.getMeetingSlotsByExpert(expertId);
 
         List<MeetingSlotResponse> slotResponses = slots.stream()
                 .map(slot -> new MeetingSlotResponse(slot.getId(), slot.getStartTime(), slot.getEndTime(), 
-                        slot.getName(), slot.getDescription(), slot.getExpert().getId()))
+                        slot.getName(), slot.getDescription(), expertId))
                 .toList();
 
         return new ResponseEntity<>(slotResponses, HttpStatus.OK);
