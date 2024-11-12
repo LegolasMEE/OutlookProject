@@ -49,7 +49,7 @@ public class MeetingService {
     public ResponseEntity<List<MeetingResponse>> getMeetingByUserId(Authentication auth) {
         User user = userService.findByUsername(auth.getName());
         List<Meeting> meetings;
-        if (user.getRole() == Role.USER) {
+        if (("ROLE" + user.getRole()).equals(Role.USER.toString())) {
             meetings = meetingRepository.findByUserId(user.getId());
         } else {
             meetings = meetingRepository.findByExpertId(user.getId());
