@@ -1,15 +1,16 @@
 package com.Trainee.ProjectOutlook.controller;
 
-import com.Trainee.ProjectOutlook.entity.Meeting;
-import com.Trainee.ProjectOutlook.entity.User;
-import com.Trainee.ProjectOutlook.enums.Role;
-import com.Trainee.ProjectOutlook.model.*;
+import com.Trainee.ProjectOutlook.dto.request.MeetingDeleteRequest;
+import com.Trainee.ProjectOutlook.dto.request.MeetingRequest;
+import com.Trainee.ProjectOutlook.dto.request.MeetingUpdateRequest;
+import com.Trainee.ProjectOutlook.dto.request.ReviewersFilterRequest;
+import com.Trainee.ProjectOutlook.dto.response.GetReviewersResponse;
+import com.Trainee.ProjectOutlook.dto.response.MeetingResponse;
+import com.Trainee.ProjectOutlook.rateLimiter.RateLimit;
 import com.Trainee.ProjectOutlook.service.MeetingService;
-import com.Trainee.ProjectOutlook.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -17,116 +18,45 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class MeetingController {
 
-    @Autowired
-    private MeetingService meetingService;
-
-    @Autowired
-    private UserService userService;
+    private final MeetingService meetingService;
 
     @PostMapping("/book-meeting")
+    @PreAuthorize("hasRole('USER')")
+    @RateLimit(capacity = 5, refillTokens = 5, refillPeriod = 60)
     public void scheduleMeeting(@RequestBody MeetingRequest meetingRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByUsername(auth.getName());
-        if (user.getRole() != Role.USER) {
-            throw new RuntimeException("Only users with role USER can schedule meetings.");
-        }
-        meetingService.scheduleMeeting(
-                user.getId(),
-                meetingRequest.getExpertId(),
-                meetingRequest.getName(),
-                meetingRequest.getDescription(),
-                meetingRequest.getStartTime(),
-                meetingRequest.getEndTime()
-        );
+        meetingService.scheduleMeeting(meetingRequest, auth);
     }
 
     @GetMapping("/get-meeting")
+    @RateLimit(capacity = 10, refillTokens = 10, refillPeriod = 60)
     public ResponseEntity<List<MeetingResponse>> getMeetingsByUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userService.findByUsername(currentUsername);
-            List<Meeting> meetings;
-            if (currentUser.getRole() == Role.USER) {
-                meetings = meetingService.getMeetingsByUser(currentUser.getId());
-            } else {
-                meetings = meetingService.getMeetingsByExpert(currentUser.getId());
-            }
-            List<MeetingResponse> meetingResponses = meetings.stream()
-                    .map(meeting -> new MeetingResponse(meeting.getId(), meeting.getName(), meeting.getExpert().getUsername(),
-                            meeting.getUser().getUsername(), meeting.getComment(), meeting.getDescription(),
-                            meeting.getStartTime(), meeting.getEndTime()))
-                    .toList();
-            return new ResponseEntity<>(meetingResponses, HttpStatus.OK);
+        return meetingService.getMeetingByUserId(authentication);
     }
 
     @PatchMapping("/get-meeting")
+    @RateLimit(capacity = 5, refillTokens = 5, refillPeriod = 60)
     public void updateMeetingDescription(@RequestBody MeetingUpdateRequest updateRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-
-        Meeting meeting = meetingService.getMeetingById(updateRequest.getMeetingId()).orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
-
-        User currentUser = userService.findByUsername(currentUsername);
-
-        if (meeting.getUser().getId().equals(currentUser.getId()) ||
-                meeting.getExpert().getId().equals(currentUser.getId())) {
-
-            if (updateRequest.getComment() != null) {
-                meeting.setComment(updateRequest.getComment());
-            }
-            if (updateRequest.getDescription() != null) {
-                meeting.setDescription(updateRequest.getDescription());
-            }
-            if (updateRequest.getName() != null) {
-                meeting.setName(updateRequest.getName());
-            }
-            if (updateRequest.getStartTime() != null) {
-                meeting.setStartTime(updateRequest.getStartTime());
-            }
-            if (updateRequest.getEndTime() != null) {
-                meeting.setEndTime(updateRequest.getEndTime());
-            }
-            meetingService.save(meeting);
-        } else {
-            throw new RuntimeException("Access denied: Only the creator or assigned expert can edit the description.");
-        }
+        meetingService.update(authentication, updateRequest);
     }
 
     @DeleteMapping("/get-meeting")
+    @RateLimit(capacity = 10, refillTokens = 5, refillPeriod = 60)
     public void deleteMeeting(@RequestBody MeetingDeleteRequest meetingDeleteRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userService.findByUsername(currentUsername);
-        Meeting meeting = meetingService.getMeetingById(meetingDeleteRequest.getMeetingId()).orElseThrow(() -> new EntityNotFoundException("Meeting not found"));
-        if (meeting.getUser().getId().equals(currentUser.getId()) ||
-                meeting.getExpert().getId().equals(currentUser.getId())) {
-            meetingService.delete(meeting);
-        } else {
-            throw new RuntimeException("Access denied: Only the creator or assigned expert can edit the description.");
-        }
+        meetingService.delete(authentication, meetingDeleteRequest);
     }
 
     @PostMapping("/get-reviewers")
+    @PreAuthorize("hasRole('USER')")
+    @RateLimit(capacity = 10, refillTokens = 10, refillPeriod = 30)
     public ResponseEntity<List<GetReviewersResponse>> getAllReviewers(@RequestBody ReviewersFilterRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userService.findByUsername(currentUsername);
-        if (currentUser.getRole() == Role.USER) {
-            List<User> users;
-            if(request.getSpecialization() != null) {
-                users = userService.findBySpecialization(request.getSpecialization());
-            } else {
-                users = userService.findAllExperts();
-            }
-            List<GetReviewersResponse> reviewersResponses = users.stream()
-                    .map(user -> new GetReviewersResponse(user.getUsername(), user.getId(), user.getSpecialization()))
-                    .toList();
-            return new ResponseEntity<>(reviewersResponses, HttpStatus.OK);
-        } else
-            throw new RuntimeException("Access denied: Only users with role USER can view experts list.");
-
+        return meetingService.getReviewers(request);
     }
 }

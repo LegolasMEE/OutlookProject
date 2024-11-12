@@ -1,4 +1,4 @@
-package com.Trainee.ProjectOutlook.model;
+package com.Trainee.ProjectOutlook.dto.response;
 
 import java.time.LocalDateTime;
 

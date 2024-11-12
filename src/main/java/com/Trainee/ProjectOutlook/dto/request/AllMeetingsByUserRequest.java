@@ -1,4 +1,4 @@
-package com.Trainee.ProjectOutlook.model;
+package com.Trainee.ProjectOutlook.dto.request;
 
 import com.Trainee.ProjectOutlook.enums.Role;
 import lombok.Getter;

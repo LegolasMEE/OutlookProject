@@ -1,4 +1,4 @@
-package com.Trainee.ProjectOutlook.model;
+package com.Trainee.ProjectOutlook.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,16 +7,17 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class MeetingUpdateRequest {
-    private Long meetingId;
+public class MeetingRequest {
+    private Long userId;
+
+    private Long expertId;
 
     private String name;
 
     private String description;
 
-    private String comment;
-
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
+
 }

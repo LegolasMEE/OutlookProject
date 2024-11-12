@@ -1,6 +1,5 @@
 package com.Trainee.ProjectOutlook;
 
-import org.flywaydb.core.Flyway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -12,13 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class ProjectOutlookApplication {
 
 	public static void main(String[] args) {
-		Flyway flyway = Flyway.configure()
-				.dataSource("jdbc:postgresql://localhost:5432/migratecheck", "postgres", "password")
-				.locations("classpath:db/migration")
-				.baselineOnMigrate(true)
-				.baselineVersion("0")
-				.load();
-		flyway.migrate();
 		SpringApplication.run(ProjectOutlookApplication.class, args);
 	}
 
