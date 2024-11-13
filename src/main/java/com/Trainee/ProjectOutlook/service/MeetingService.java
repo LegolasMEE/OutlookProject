@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 @Service
 public class MeetingService {
@@ -49,7 +49,7 @@ public class MeetingService {
     public ResponseEntity<List<MeetingResponse>> getMeetingByUserId(Authentication auth) {
         User user = userService.findByUsername(auth.getName());
         List<Meeting> meetings;
-        if (("ROLE" + user.getRole()).equals(Role.USER.toString())) {
+        if (user.getRoles() == Role.ROLE_USER) {
             meetings = meetingRepository.findByUserId(user.getId());
         } else {
             meetings = meetingRepository.findByExpertId(user.getId());

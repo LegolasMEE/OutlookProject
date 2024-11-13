@@ -35,8 +35,7 @@ public class MeetingSlotController {
     public MeetingSlot createMeetingSlot(@RequestBody MeetingSlotRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByUsername(auth.getName());
-
-        if (!(("ROLE" + user.getRole()).equals(Role.EXPERT.toString()))) {
+        if (user.getRoles() != Role.ROLE_EXPERT) {
             throw new RuntimeException("Only experts can add new meeting slots!");
         }
 
@@ -68,7 +67,7 @@ public class MeetingSlotController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.findByUsername(currentUsername);
-        if (!(("ROLE" + currentUser.getRole()).equals(Role.EXPERT.toString()))) {
+        if (currentUser.getRoles() != Role.ROLE_EXPERT) {
             throw new RuntimeException("Only experts can delete meeting slots!");
         }        
 

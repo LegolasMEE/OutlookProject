@@ -45,10 +45,10 @@ public class JwtUtil {
                 userDetails.getUsername(), userService.findByUsername(userDetails.getUsername()).getId());
     }
 
-    private String createToken(String role, String subject, Long id) {
+    private String createToken(String roles, String subject, Long id) {
         return Jwts.builder()
                 .setSubject(subject)
-                .claim("roles", role)
+                .claim("roles", roles)
                 .claim("userId", id)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 часов

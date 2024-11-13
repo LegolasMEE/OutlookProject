@@ -23,7 +23,7 @@ public class User {
     private String specialization;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role roles;
 
 }
 

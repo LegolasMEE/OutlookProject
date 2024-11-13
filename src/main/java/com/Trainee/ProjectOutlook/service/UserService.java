@@ -18,7 +18,7 @@ public class UserService {
 
     @Transactional
     public List<User> findAllExperts() {
-        return userRepository.findByRole(Role.EXPERT);
+        return userRepository.findByRoles(Role.ROLE_EXPERT);
     }
 
     @Transactional

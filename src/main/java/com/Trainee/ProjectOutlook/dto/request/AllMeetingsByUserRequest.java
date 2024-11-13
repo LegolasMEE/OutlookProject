@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class AllMeetingsByUserRequest {
     private Long userId;
-    private Role role;
+    private Role roles;
 }

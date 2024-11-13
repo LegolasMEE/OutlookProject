@@ -4,7 +4,7 @@ CREATE TABLE users (
                        username VARCHAR(255) NOT NULL,
                        password VARCHAR(255) NOT NULL,
                        specialization VARCHAR(255),
-                       role VARCHAR(50) NOT NULL
+                       roles VARCHAR(50) NOT NULL
 );
 
 -- Создание таблицы meetings
@@ -33,12 +33,12 @@ CREATE TABLE meeting_slots (
 );
 
 -- Вставка данных в таблицу users
-INSERT INTO users (username, password, specialization, role) VALUES
-                                                                 ('John_Smith', '$2y$10$eo6ge8xFZcGHqJFQNAo6kelVGF9nJX9Vb6qFRGBAfkwDLvCDpxf8K', null, 'USER'),
-                                                                 ('Elisabeth_Walker', '$2y$10$kXh1WoAG2c6EHThjBuDSy.U.6qLVLg9VwatIeKyXNKrWqBDcZjYY2', 'Data Scientist', 'EXPERT'),
-                                                                 ('Jeff_Bezos', '$2y$10$RhIZJ55.zH5H3otCdaun9e51ydIwBnVHMmGXCwUxRiOBEEL12Jd/2', 'Python developer', 'EXPERT'),
-                                                                 ('Josef_Stalin', '$2y$10$hVlNaqQmv5CDBgbXS2RSW..VAi2o5KI2tGMJLuYG/RNmHZe8qd7u2', 'Java developer', 'EXPERT'),
-                                                                 ('Sergey_Kulakov', '$2y$10$Kk94bngzydh3AFJGMEzOzeMGvqdz3a5eRIgwSg4ZyAINgk0/E8Ul2', null, 'USER');
+INSERT INTO users (username, password, specialization, roles) VALUES
+                                                                 ('John_Smith', '$2y$10$eo6ge8xFZcGHqJFQNAo6kelVGF9nJX9Vb6qFRGBAfkwDLvCDpxf8K', null, 'ROLE_USER'),
+                                                                 ('Elisabeth_Walker', '$2y$10$kXh1WoAG2c6EHThjBuDSy.U.6qLVLg9VwatIeKyXNKrWqBDcZjYY2', 'Data Scientist', 'ROLE_EXPERT'),
+                                                                 ('Jeff_Bezos', '$2y$10$RhIZJ55.zH5H3otCdaun9e51ydIwBnVHMmGXCwUxRiOBEEL12Jd/2', 'Python developer', 'ROLE_EXPERT'),
+                                                                 ('Josef_Stalin', '$2y$10$hVlNaqQmv5CDBgbXS2RSW..VAi2o5KI2tGMJLuYG/RNmHZe8qd7u2', 'Java developer', 'ROLE_EXPERT'),
+                                                                 ('Sergey_Kulakov', '$2y$10$Kk94bngzydh3AFJGMEzOzeMGvqdz3a5eRIgwSg4ZyAINgk0/E8Ul2', null, 'ROLE_USER');
 
 -- Вставка данных в таблицу meetings
 INSERT INTO meetings (description, start_time, name, comment, end_time, user_id, expert_id) VALUES
