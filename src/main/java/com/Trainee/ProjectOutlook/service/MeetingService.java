@@ -3,8 +3,6 @@ package com.Trainee.ProjectOutlook.service;
 import com.Trainee.ProjectOutlook.dto.request.MeetingDeleteRequest;
 import com.Trainee.ProjectOutlook.dto.request.MeetingRequest;
 import com.Trainee.ProjectOutlook.dto.request.MeetingUpdateRequest;
-import com.Trainee.ProjectOutlook.dto.request.ReviewersFilterRequest;
-import com.Trainee.ProjectOutlook.dto.response.GetReviewersResponse;
 import com.Trainee.ProjectOutlook.dto.response.MeetingResponse;
 import com.Trainee.ProjectOutlook.entity.Meeting;
 import com.Trainee.ProjectOutlook.entity.User;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MeetingService {
@@ -100,19 +97,5 @@ public class MeetingService {
         } else {
             throw new RuntimeException("Access denied: Only the creator or assigned expert can edit the description.");
         }
-    }
-
-    @Transactional
-    public ResponseEntity<List<GetReviewersResponse>> getReviewers(ReviewersFilterRequest request) {
-        List<User> users;
-        if(request.getSpecialization() != null) {
-            users = userService.findBySpecialization(request.getSpecialization());
-        } else {
-            users = userService.findAllExperts();
-        }
-        List<GetReviewersResponse> reviewersResponses = users.stream()
-                .map(user -> new GetReviewersResponse(user.getUsername(), user.getId(), user.getSpecialization()))
-                .toList();
-        return new ResponseEntity<>(reviewersResponses, HttpStatus.OK);
     }
 }

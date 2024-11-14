@@ -7,7 +7,9 @@ import com.Trainee.ProjectOutlook.dto.request.ReviewersFilterRequest;
 import com.Trainee.ProjectOutlook.dto.response.GetReviewersResponse;
 import com.Trainee.ProjectOutlook.dto.response.MeetingResponse;
 import com.Trainee.ProjectOutlook.rateLimiter.RateLimit;
+import com.Trainee.ProjectOutlook.service.ExpertService;
 import com.Trainee.ProjectOutlook.service.MeetingService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +25,7 @@ import java.util.List;
 public class MeetingController {
 
     private final MeetingService meetingService;
+    private final ExpertService expertService;
 
     @PostMapping("/book-meeting")
     @PreAuthorize("hasRole('USER')")
@@ -56,7 +59,7 @@ public class MeetingController {
     @PostMapping("/get-reviewers")
     @PreAuthorize("hasRole('USER')")
     @RateLimit(capacity = 10, refillTokens = 10, refillPeriod = 30)
-    public ResponseEntity<List<GetReviewersResponse>> getAllReviewers(@RequestBody ReviewersFilterRequest request) {
-        return meetingService.getReviewers(request);
+    public ResponseEntity<List<GetReviewersResponse>> getAllReviewers(@RequestBody ReviewersFilterRequest request) throws JsonProcessingException {
+        return expertService.getExperts(request.getSpecialization());
     }
 }

@@ -3,7 +3,6 @@ CREATE TABLE users (
                        id SERIAL PRIMARY KEY,
                        username VARCHAR(255) NOT NULL,
                        password VARCHAR(255) NOT NULL,
-                       specialization VARCHAR(255),
                        roles VARCHAR(50) NOT NULL
 );
 
@@ -33,21 +32,22 @@ CREATE TABLE meeting_slots (
 );
 
 -- Вставка данных в таблицу users
-INSERT INTO users (username, password, specialization, roles) VALUES
-                                                                 ('John_Smith', '$2y$10$eo6ge8xFZcGHqJFQNAo6kelVGF9nJX9Vb6qFRGBAfkwDLvCDpxf8K', null, 'ROLE_USER'),
-                                                                 ('Elisabeth_Walker', '$2y$10$kXh1WoAG2c6EHThjBuDSy.U.6qLVLg9VwatIeKyXNKrWqBDcZjYY2', 'Data Scientist', 'ROLE_EXPERT'),
-                                                                 ('Jeff_Bezos', '$2y$10$RhIZJ55.zH5H3otCdaun9e51ydIwBnVHMmGXCwUxRiOBEEL12Jd/2', 'Python developer', 'ROLE_EXPERT'),
-                                                                 ('Josef_Stalin', '$2y$10$hVlNaqQmv5CDBgbXS2RSW..VAi2o5KI2tGMJLuYG/RNmHZe8qd7u2', 'Java developer', 'ROLE_EXPERT'),
-                                                                 ('Sergey_Kulakov', '$2y$10$Kk94bngzydh3AFJGMEzOzeMGvqdz3a5eRIgwSg4ZyAINgk0/E8Ul2', null, 'ROLE_USER');
+INSERT INTO users (username, password, roles) VALUES
+                                                                 ('joe', '$2y$10$ABooq0856y5bC7wlqpxlQeJBGPyoc3tKhBcUwDYUfHit6eyxl1EeW', 'ROLE_EXPERT'),
+                                                                 ('donald', '$2y$10$kXh1WoAG2c6EHThjBuDSy.U.6qLVLg9VwatIeKyXNKrWqBDcZjYY2', 'ROLE_EXPERT'),
+                                                                 ('kamala', '$2y$10$RhIZJ55.zH5H3otCdaun9e51ydIwBnVHMmGXCwUxRiOBEEL12Jd/2', 'ROLE_EXPERT'),
+                                                                 ('robert', '$2y$10$hVlNaqQmv5CDBgbXS2RSW..VAi2o5KI2tGMJLuYG/RNmHZe8qd7u2', 'ROLE_EXPERT'),
+                                                                 ('sergey', '$2y$10$Kk94bngzydh3AFJGMEzOzeMGvqdz3a5eRIgwSg4ZyAINgk0/E8Ul2', 'ROLE_USER'),
+                                                                 ('john', '$2y$10$eo6ge8xFZcGHqJFQNAo6kelVGF9nJX9Vb6qFRGBAfkwDLvCDpxf8K', 'ROLE_USER');
 
 -- Вставка данных в таблицу meetings
 INSERT INTO meetings (description, start_time, name, comment, end_time, user_id, expert_id) VALUES
-                                                                                                ('Project kickoff meeting', '2024-11-10 10:00:00', 'Kickoff', null, '2024-11-10 11:00:00', 1, 2),
-                                                                                                ('Review system', '2024-11-13 10:00:00', 'Review', null, '2024-11-13 11:00:00', 1, 3),
-                                                                                                ('Troubles with me', '2024-11-10 15:00:00', 'Aloha', null, '2024-11-10 16:00:00', 1, 4),
-                                                                                                ('Data review session', '2024-11-15 16:00:00', 'Data Review', null, '2024-11-15 17:30:00', 5, 4),
-                                                                                                ('Clean Room for my buddies', '2024-11-16 14:00:00', 'Party', null, '2024-11-16 15:30:00', 5, 2),
-                                                                                                ('Something wrong with code', '2024-11-15 14:00:00', 'Nothing', null, '2024-11-15 15:30:00', 5, 3);
+                                                                                                ('Project kickoff meeting', '2024-11-10 10:00:00', 'Kickoff', null, '2024-11-10 11:00:00', 5, 2),
+                                                                                                ('Review system', '2024-11-13 10:00:00', 'Review', null, '2024-11-13 11:00:00', 5, 2),
+                                                                                                ('Troubles with me', '2024-11-10 15:00:00', 'Aloha', null, '2024-11-10 16:00:00', 5, 4),
+                                                                                                ('Data review session', '2024-11-15 16:00:00', 'Data Review', null, '2024-11-15 17:30:00', 6, 4),
+                                                                                                ('Clean Room for my buddies', '2024-11-16 14:00:00', 'Party', null, '2024-11-16 15:30:00', 6, 1),
+                                                                                                ('Something wrong with code', '2024-11-15 14:00:00', 'Nothing', null, '2024-11-15 15:30:00', 6, 1);
 
 -- Вставка данных в таблицу meeting_slots
 INSERT INTO meeting_slots (start_time, end_time, name, description, user_id) VALUES

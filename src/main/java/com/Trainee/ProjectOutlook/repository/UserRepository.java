@@ -12,5 +12,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByRoles(Role roles);
 
-    List<User> findBySpecialization(String specialization);
 }
